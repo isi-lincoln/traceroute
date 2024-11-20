@@ -3,12 +3,14 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/aeden/traceroute"
 	"net"
+	"os"
+
+	"github.com/aeden/traceroute"
 )
 
 func printHop(hop traceroute.TracerouteHop) {
-	addr := fmt.Sprintf("%v.%v.%v.%v", hop.Address[0], hop.Address[1], hop.Address[2], hop.Address[3])
+	addr := hop.Address.String()
 	hostOrAddr := addr
 	if hop.Host != "" {
 		hostOrAddr = hop.Host
@@ -20,14 +22,16 @@ func printHop(hop traceroute.TracerouteHop) {
 	}
 }
 
-func address(address [4]byte) string {
-	return fmt.Sprintf("%v.%v.%v.%v", address[0], address[1], address[2], address[3])
-}
-
 func main() {
 	var m = flag.Int("m", traceroute.DEFAULT_MAX_HOPS, `Set the max time-to-live (max number of hops) used in outgoing probe packets (default is 64)`)
 	var f = flag.Int("f", traceroute.DEFAULT_FIRST_HOP, `Set the first used time-to-live, e.g. the first hop (default is 1)`)
 	var q = flag.Int("q", 1, `Set the number of probes per "ttl" to nqueries (default is one probe).`)
+
+	if len(os.Args) == 1 {
+		fmt.Printf("Usage:\n")
+		fmt.Printf("%s <destination>\n", os.Args[0])
+		os.Exit(1)
+	}
 
 	flag.Parse()
 	host := flag.Arg(0)
@@ -55,8 +59,8 @@ func main() {
 		}
 	}()
 
-	_, err = traceroute.Traceroute(host, &options, c)
+	_, err = traceroute.Traceroute(nil, host, &options, c)
 	if err != nil {
-		fmt.Printf("Error: ", err)
+		fmt.Printf("Error: %v\n", err)
 	}
 }
