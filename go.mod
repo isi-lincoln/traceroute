@@ -1,3 +1,3 @@
-module github.com/aeden/traceroute
+module github.com/isi-lincoln/traceroute
 
 go 1.14

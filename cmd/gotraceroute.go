@@ -6,7 +6,7 @@ import (
 	"net"
 	"os"
 
-	"github.com/aeden/traceroute"
+	"github.com/isi-lincoln/traceroute"
 )
 
 func printHop(hop traceroute.TracerouteHop) {
