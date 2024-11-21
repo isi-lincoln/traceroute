@@ -137,6 +137,22 @@ type TracerouteHop struct {
 	TTL         int
 }
 
+func (hop *TracerouteHop) PrintHop() string {
+	addr := hop.Address.String()
+	hostOrAddr := addr
+	if hop.Host != "" {
+		hostOrAddr = hop.Host
+	}
+	output := ""
+	if hop.Success {
+		output = fmt.Sprintf("%-3d %v %v (%v) %v\n", hop.TTL, addr, hostOrAddr, hop.ElapsedTime)
+	} else {
+		output = fmt.Sprintf("%-3d *\n", hop.TTL)
+	}
+
+	return output
+}
+
 func (hop *TracerouteHop) AddressString() string {
 	return hop.Address.String()
 }
@@ -203,6 +219,8 @@ func Traceroute(source *string, dest string, options *TracerouteOptions, c ...ch
 
 		socketAddr = ipAddr
 	}
+
+	fmt.Printf("Traceroute Debug: selected source address: %s", socketAddr)
 
 	timeoutMs := (int64)(options.TimeoutMs())
 	tv := syscall.NsecToTimeval(1000 * 1000 * timeoutMs)

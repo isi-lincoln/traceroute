@@ -9,19 +9,6 @@ import (
 	"github.com/isi-lincoln/traceroute"
 )
 
-func printHop(hop traceroute.TracerouteHop) {
-	addr := hop.Address.String()
-	hostOrAddr := addr
-	if hop.Host != "" {
-		hostOrAddr = hop.Host
-	}
-	if hop.Success {
-		fmt.Printf("%-3d %v (%v)  %v\n", hop.TTL, hostOrAddr, addr, hop.ElapsedTime)
-	} else {
-		fmt.Printf("%-3d *\n", hop.TTL)
-	}
-}
-
 func main() {
 	var m = flag.Int("m", traceroute.DEFAULT_MAX_HOPS, `Set the max time-to-live (max number of hops) used in outgoing probe packets (default is 64)`)
 	var f = flag.Int("f", traceroute.DEFAULT_FIRST_HOP, `Set the first used time-to-live, e.g. the first hop (default is 1)`)
@@ -57,7 +44,7 @@ func main() {
 				fmt.Println()
 				return
 			}
-			printHop(hop)
+			hop.PrintHop()
 		}
 	}()
 
