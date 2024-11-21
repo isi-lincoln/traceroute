@@ -44,7 +44,7 @@ func main() {
 				fmt.Println()
 				return
 			}
-			hop.PrintHop()
+			fmt.Println(hop.PrintHop())
 		}
 	}()
 
